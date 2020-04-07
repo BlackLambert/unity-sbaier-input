@@ -1,0 +1,15 @@
+{
+    "name": "sbaier.input",
+    "displayName": "SBaier Input",
+    "version": "1.0.0",
+    "unity": "2019.3",
+    "description": "Generalized Input Interface",
+    "keywords": [ "Input", "Logic" ],
+    "category": "Controllers",
+    "dependencies": {
+    },
+    "author": {
+        "name": "Sebastian Baier",
+        "email": "sebastian.baier93@hotmail.de"
+    }
+}
