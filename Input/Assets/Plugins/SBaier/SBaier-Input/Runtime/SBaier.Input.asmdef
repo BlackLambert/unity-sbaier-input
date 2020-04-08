@@ -1,3 +1,16 @@
-﻿{
-	"name": "SBaier.Input"
+{
+    "name": "SBaier.Input",
+    "references": [
+        "GUID:98dc6b40b2e9ba94d8d1dfc91f8325a3",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

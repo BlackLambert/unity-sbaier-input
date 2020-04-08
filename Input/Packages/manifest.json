@@ -7,6 +7,7 @@
     "com.unity.textmeshpro": "2.0.1",
     "com.unity.timeline": "1.2.13",
     "com.unity.ugui": "1.0.0",
+    "sbaier.zenject": "https://github.com/BlackLambert/unity-sbaier-zenject.git#unity-package",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -38,5 +39,11 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
+  },
+  "lock": {
+    "sbaier.zenject": {
+      "revision": "unity-package",
+      "hash": "6924b212827b628ed4669633cba2fe0b2c61b4c8"
+    }
   }
 }
