@@ -12,7 +12,7 @@ namespace SBaier.Input
 			GameObject hook = new GameObject("ButtonInputDetectors");
 			Container.Bind(typeof(ButtonInputRegistry)).To<ButtonInputRegistryImpl>().AsSingle().WithArguments(hook);
 			Container.Bind(typeof(ButtonInputDetector)).To<BasicButtonInputDetector>().FromResource(_inputDetectorPrefabPath).AsTransient();
-			Container.Bind(typeof(PrefabFactory)).To<PrefabFactory>().AsTransient();
+			
 		}
 	}
 }
