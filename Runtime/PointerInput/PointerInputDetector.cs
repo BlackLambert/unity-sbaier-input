@@ -22,16 +22,18 @@ namespace SBaier.Input
 		}
 		
 
-		protected PointerRaycastHit[] raycastAt(Vector2 screenPosition)
+		protected RaycastAllResult raycastAt(Vector2 screenPosition)
 		{
 			List<PointerRaycastHit> hits = new List<PointerRaycastHit>();
 			if (Camera.current == null)
-				return new PointerRaycastHit[0];
+				return new RaycastAllResult(new PointerRaycastHit[0], false);
 			Ray ray = Camera.current.ScreenPointToRay(screenPosition);
 			hits.AddRange(raycastPhysics(ray));
 			hits.AddRange(raycast2D(ray));
-			hits.AddRange(raycastGraphics(screenPosition));
-			return hits.ToArray();
+			List<PointerRaycastHit> uIHits = raycastUI(screenPosition);
+			hits.AddRange(uIHits);
+			bool overUI = uIHits.Count > 0;
+			return new RaycastAllResult(hits.ToArray(), overUI);
 		}
 
 		private List<PointerRaycastHit> raycastPhysics(Ray ray)
@@ -52,7 +54,7 @@ namespace SBaier.Input
 			return result;
 		}
 
-		private List<PointerRaycastHit> raycastGraphics(Vector2 screenPosition)
+		private List<PointerRaycastHit> raycastUI(Vector2 screenPosition)
 		{
 			List<PointerRaycastHit> result = new List<PointerRaycastHit>();
 			EventSystem system = EventSystem.current;
@@ -65,6 +67,20 @@ namespace SBaier.Input
 			foreach(RaycastResult hit in hits)
 				result.Add(new PointerRaycastHit(hit.gameObject.transform, hit.worldPosition, hit.distance));
 			return result;
+		}
+
+		protected struct RaycastAllResult
+		{
+			public PointerRaycastHit[] Hits { get; }
+			public bool IsOverUI { get; }
+
+
+			public RaycastAllResult(PointerRaycastHit[] hits,
+				bool isOverUI)
+			{
+				Hits = hits;
+				IsOverUI = isOverUI;
+			}
 		}
 	}
 }

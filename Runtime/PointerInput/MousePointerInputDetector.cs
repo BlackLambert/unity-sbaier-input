@@ -23,8 +23,8 @@ namespace SBaier.Input
 			Vector2 mousePos = UnityEngine.Input.mousePosition;
 			Vector2 delta = mousePos - _formerPos;
 			_formerPos = mousePos;
-			PointerRaycastHit[] hits = raycastAt(mousePos);
-			PointerInputEventArgs mousePointerInput = new PointerInputEventArgs(mousePos, delta, hits);
+			RaycastAllResult result = raycastAt(mousePos);
+			PointerInputEventArgs mousePointerInput = new PointerInputEventArgs(mousePos, delta, result.Hits, result.IsOverUI);
 			_pointerInputs = new PointersInputEventArgs(new List<PointerInputEventArgs>() { mousePointerInput });
 			OnPointerInputsUpdate?.Invoke(PointerInputs);
 		}
