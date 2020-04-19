@@ -31,14 +31,13 @@ namespace SBaier.Input
 			if (index >= _maxPointerCount)
 				throw new ArgumentException($"Adding the listener has failed. The maximal pointer count is set to {_maxPointerCount}.");
 
-			getDetector();
-			List<Action<PointerInputEventArgs>> listeners;
-			if(!_pointerListeners.TryGetValue(index, out listeners))
-			{
-				listeners = new List<Action<PointerInputEventArgs>>();
+			PointersInputDetector detector = getDetector();
+			if (_pointerListeners.Count == 0)
+				detector.OnPointerInputsUpdate += onUpdate;
+
+			if(!_pointerListeners.ContainsKey(index))
 				_pointerListeners[index] = new List<Action<PointerInputEventArgs>>();
-			}
-			listeners.Add(listener);
+			_pointerListeners[index].Add(listener);
 		}
 
 		public override void Subscribe(Action<PointersInputEventArgs> listener)
@@ -49,9 +48,15 @@ namespace SBaier.Input
 
 		public override void Unsubscribe(int index, Action<PointerInputEventArgs> listener)
 		{
-			if (!_pointerListeners.ContainsKey(index) || !_pointerListeners[index].Contains(listener))
+			if (!_pointerListeners.ContainsKey(index) || !_pointerListeners[index].Contains(listener) || _detector == null)
 				return;
-			_pointerListeners[index].Remove(listener);
+			List<Action<PointerInputEventArgs>> listeners = _pointerListeners[index];
+			listeners.Remove(listener);
+
+			if (listeners.Count == 0)
+				_pointerListeners.Remove(index);
+			if (_pointerListeners.Count == 0)
+				getDetector().OnPointerInputsUpdate -= onUpdate;
 		}
 
 		public override void Unsubscribe(Action<PointersInputEventArgs> listener)
@@ -67,6 +72,18 @@ namespace SBaier.Input
 				_detector = createInputDetector(_detectorPrefab, new PrefabFactory.Parameter[] {
 					new PrefabFactory.Parameter(_maxPointerCount), new PrefabFactory.Parameter(_maxRaycastDistance) });
 			return _detector;
+		}
+
+		private void onUpdate(PointersInputEventArgs args)
+		{
+			for (int i = 0; i < args.PointerInputs.Count; i++)
+			{
+				if (!_pointerListeners.ContainsKey(i))
+					continue;
+				List<Action<PointerInputEventArgs>> listeners = _pointerListeners[i];
+				foreach (Action<PointerInputEventArgs> listener in listeners)
+					listener.Invoke(args.PointerInputs[i]);
+			}
 		}
 	}
 }

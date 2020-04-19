@@ -30,8 +30,8 @@ namespace SBaier.Input
 			{
 				Touch touch = UnityEngine.Input.touches[i];
 				Vector2 touchPos = touch.position;
-				PointerRaycastHit[] hits = raycastAt(touchPos);
-				PointerInputEventArgs touchPointerInput = new PointerInputEventArgs(touchPos, touch.deltaPosition, hits);
+				RaycastAllResult result = raycastAt(touchPos);
+				PointerInputEventArgs touchPointerInput = new PointerInputEventArgs(touchPos, touch.deltaPosition, result.Hits, result.IsOverUI);
 				pointerInputs.Add(touchPointerInput);
 			}
 			_pointerInputs = new PointersInputEventArgs(pointerInputs);

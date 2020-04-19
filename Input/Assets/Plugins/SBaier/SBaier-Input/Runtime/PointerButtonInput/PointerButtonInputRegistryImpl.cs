@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Zenject;
 
 namespace SBaier.Input
 {
-	public class ButtonInputRegistryImpl : ButtonInputRegistry
+	public class PointerButtonInputRegistryImpl : PointerButtonInputRegistry
 	{
-		private Dictionary<KeyCode, ButtonInputDetector> _detectors = new Dictionary<KeyCode, ButtonInputDetector>();
-		private ButtonInputDetector _detectorPrefab;
-
+		private Dictionary<int, PointerButtonInputDetector> _detectors = new Dictionary<int, PointerButtonInputDetector>();
+		private PointerButtonInputDetector _detectorPrefab;
 
 		[Inject]
-		private void Construct(ButtonInputDetector detectorPrefab)
+		private void Construct(PointerButtonInputDetector detectorPrefab)
 		{
 			_detectorPrefab = detectorPrefab;
 		}
 
 
 
-		public override void Subscribe(KeyCode code, ButtonState state, Action<ButtonInputEventArgs> listener)
+
+		public override void Subscribe(int index, ButtonState state, Action<PointerButtonInputEventArgs> listener)
 		{
-			ButtonInputDetector detector = getDetector(code);
-			switch(state)
+			PointerButtonInputDetector detector = getDetector(index);
+			switch (state)
 			{
 				case ButtonState.Down:
 					detector.OnDown += listener;
@@ -40,9 +39,9 @@ namespace SBaier.Input
 			}
 		}
 
-		public override void Unsubscribe(KeyCode code, ButtonState state, Action<ButtonInputEventArgs> listener)
+		public override void Unsubscribe(int index, ButtonState state, Action<PointerButtonInputEventArgs> listener)
 		{
-			ButtonInputDetector detector = getDetector(code);
+			PointerButtonInputDetector detector = getDetector(index);
 			switch (state)
 			{
 				case ButtonState.Down:
@@ -61,14 +60,14 @@ namespace SBaier.Input
 			}
 		}
 
-		private ButtonInputDetector getDetector(KeyCode code)
+		private PointerButtonInputDetector getDetector(int index)
 		{
-			ButtonInputDetector inputDetector;
-			if(!_detectors.TryGetValue(code, out inputDetector))
+			PointerButtonInputDetector inputDetector;
+			if(!_detectors.TryGetValue(index, out inputDetector))
 			{
-				PrefabFactory.Parameter[] parameters = new PrefabFactory.Parameter[] { new PrefabFactory.Parameter(code) };
+				PrefabFactory.Parameter[] parameters = new PrefabFactory.Parameter[] { new PrefabFactory.Parameter(index) };
 				inputDetector = createInputDetector(_detectorPrefab, parameters);
-				_detectors.Add(code, inputDetector);
+				_detectors.Add(index, inputDetector);
 			}
 			return inputDetector;
 		}
