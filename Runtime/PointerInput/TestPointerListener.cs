@@ -30,9 +30,10 @@ namespace SBaier.Input.Test
 
 		private void onPointerUpdate(PointersInputEventArgs args)
 		{
-			Debug.Log($"There are currently {args.Count} pointers.");
+			string text = $"There are currently {args.Count} pointers. ";
 			if(args.Count > 0)
-				Debug.Log($"The first pointer is at Screen Position {args.PointerInputs[0].ScreenPosition}.");
+				text += $"The first pointer is at Screen Position {args.PointerInputs[0].ScreenPosition}. The pointer is over {args.PointerInputs[0].RaycastHits.Length} Objects";
+			Debug.Log(text);
 		}
 	}
 }
