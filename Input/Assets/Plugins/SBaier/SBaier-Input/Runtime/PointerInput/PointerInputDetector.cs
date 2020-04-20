@@ -1,33 +1,32 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Zenject;
 
 namespace SBaier.Input
 {
 	public abstract class PointersInputDetector : InputDetector
 	{
-		public abstract PointersInputEventArgs PointerInputs { get; }
-		public abstract event Action<PointersInputEventArgs> OnPointerInputsUpdate;
 		private float _maxRaycastDistance;
+		private Camera _inputCamera;
 
 
 		[Inject]
-		private void Construct(float maxRaycastDistance)
+		private void Construct(float maxRaycastDistance, [Inject(Id = "InputCamera")]Camera inputCamera)
 		{
 			_maxRaycastDistance = maxRaycastDistance;
+			_inputCamera = inputCamera;
 		}
-		
+
+
+		public abstract PointersInputEventArgs GetPointerInputs();
 
 		protected RaycastAllResult raycastAt(Vector2 screenPosition)
 		{
 			List<PointerRaycastHit> hits = new List<PointerRaycastHit>();
-			if (Camera.current == null)
+			if (_inputCamera == null)
 				return new RaycastAllResult(new PointerRaycastHit[0], false);
-			Ray ray = Camera.current.ScreenPointToRay(screenPosition);
+			Ray ray = _inputCamera.ScreenPointToRay(screenPosition);
 			hits.AddRange(raycastPhysics(ray));
 			hits.AddRange(raycast2D(ray));
 			List<PointerRaycastHit> uIHits = raycastUI(screenPosition);

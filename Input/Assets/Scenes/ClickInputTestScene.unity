@@ -168,6 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxPointerCount: 2
   _maximalRaycastDistance: 200
+  _inputCamera: {fileID: 1446887278}
 --- !u!114 &701535840
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -8,11 +6,7 @@ namespace SBaier.Input
 {
 	public class TouchPointersInputDetector : PointersInputDetector
 	{
-		public override PointersInputEventArgs PointerInputs => _pointerInputs;
-		private PointersInputEventArgs _pointerInputs = new PointersInputEventArgs(new List<PointerInputEventArgs>());
 		private int _maxPointer;
-
-		public override event Action<PointersInputEventArgs> OnPointerInputsUpdate;
 
 
 		[Inject]
@@ -21,8 +15,7 @@ namespace SBaier.Input
 			_maxPointer = maxPointer;
 		}
 
-
-		protected virtual void Update()
+		public override PointersInputEventArgs GetPointerInputs()
 		{
 			List<PointerInputEventArgs> pointerInputs = new List<PointerInputEventArgs>();
 			int border = Mathf.Min(_maxPointer, UnityEngine.Input.touchCount);
@@ -34,8 +27,7 @@ namespace SBaier.Input
 				PointerInputEventArgs touchPointerInput = new PointerInputEventArgs(touchPos, touch.deltaPosition, result.Hits, result.IsOverUI);
 				pointerInputs.Add(touchPointerInput);
 			}
-			_pointerInputs = new PointersInputEventArgs(pointerInputs);
-			OnPointerInputsUpdate?.Invoke(PointerInputs);
+			return new PointersInputEventArgs(pointerInputs);
 		}
 	}
 }

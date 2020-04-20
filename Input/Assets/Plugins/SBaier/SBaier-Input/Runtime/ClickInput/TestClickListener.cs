@@ -24,7 +24,7 @@ namespace SBaier.Input.Test
 
 		private void onClick(ClickInputEventArgs obj)
 		{
-			string log = $"The {_pointerIndex.ToString()}-PointerButton has been clicked over {obj.ClickedObjects.Length} Objects.";
+			string log = $"The {_pointerIndex.ToString()}-PointerButton has been clicked at position {obj.PointerInput.ScreenPosition} ({UnityEngine.Input.mousePosition}) over {obj.ClickedObjects.Length} Objects.";
 			foreach(PointerRaycastHit hit in obj.ClickedObjects)
 			{
 				log += $" {hit.Obj.name}";

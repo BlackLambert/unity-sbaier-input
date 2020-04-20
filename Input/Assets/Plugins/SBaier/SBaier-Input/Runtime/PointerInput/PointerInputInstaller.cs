@@ -12,6 +12,8 @@ namespace SBaier.Input
 		private int _maxPointerCount = 2;
 		[SerializeField]
 		private float _maximalRaycastDistance = 200f;
+		[SerializeField]
+		private Camera _inputCamera = null;
 
 		public override void InstallBindings()
 		{
@@ -21,6 +23,7 @@ namespace SBaier.Input
 				Container.Bind(typeof(PointersInputDetector)).To<TouchPointersInputDetector>().FromResource(_touchInputDetectorPrefabPath).AsTransient();
 			else
 				Container.Bind(typeof(PointersInputDetector)).To<MousePointerInputDetector>().FromResource(_mouseInputDetectorPrefabPath).AsTransient();
+			Container.Bind(typeof(Camera)).WithId("InputCamera").To<Camera>().FromInstance(_inputCamera).AsSingle();
 		}
 	}
 }

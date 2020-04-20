@@ -12,8 +12,20 @@ namespace SBaier.Input
 		private PointersInputDetector _detectorPrefab;
 		private int _maxPointerCount;
 		private float _maxRaycastDistance;
+		private float _lastCheckedTime;
 
-		private Dictionary<int, List<Action<PointerInputEventArgs>>> _pointerListeners = new Dictionary<int, List<Action<PointerInputEventArgs>>>();
+		private PointersInputEventArgs _pointersInput;
+		private PointersInputEventArgs PointersInput
+		{
+			get
+			{
+				if (_lastCheckedTime == Time.time)
+					return _pointersInput;
+				_lastCheckedTime = Time.time;
+				_pointersInput = getDetector().GetPointerInputs();
+				return _pointersInput;
+			}
+	}
 
 
 		[Inject]
@@ -23,47 +35,23 @@ namespace SBaier.Input
 			_detectorPrefab = detectorPrefab;
 			_maxPointerCount = maxPointerCount;
 			_maxRaycastDistance = maxRaycastDistance;
+			_lastCheckedTime = -1;
 		}
 
 
-		public override void Subscribe(int index, Action<PointerInputEventArgs> listener)
+		public override PointerInputEventArgs GetPointerInput(int index)
 		{
 			if (index >= _maxPointerCount)
 				throw new ArgumentException($"Adding the listener has failed. The maximal pointer count is set to {_maxPointerCount}.");
 
-			PointersInputDetector detector = getDetector();
-			if (_pointerListeners.Count == 0)
-				detector.OnPointerInputsUpdate += onUpdate;
-
-			if(!_pointerListeners.ContainsKey(index))
-				_pointerListeners[index] = new List<Action<PointerInputEventArgs>>();
-			_pointerListeners[index].Add(listener);
+			if (PointersInput.Count <= index)
+				return null;
+			return PointersInput.PointerInputs[index];
 		}
 
-		public override void Subscribe(Action<PointersInputEventArgs> listener)
+		public override PointersInputEventArgs GetPointerInput()
 		{
-			PointersInputDetector detector = getDetector();
-			detector.OnPointerInputsUpdate += listener;
-		}
-
-		public override void Unsubscribe(int index, Action<PointerInputEventArgs> listener)
-		{
-			if (!_pointerListeners.ContainsKey(index) || !_pointerListeners[index].Contains(listener) || _detector == null)
-				return;
-			List<Action<PointerInputEventArgs>> listeners = _pointerListeners[index];
-			listeners.Remove(listener);
-
-			if (listeners.Count == 0)
-				_pointerListeners.Remove(index);
-			if (_pointerListeners.Count == 0)
-				getDetector().OnPointerInputsUpdate -= onUpdate;
-		}
-
-		public override void Unsubscribe(Action<PointersInputEventArgs> listener)
-		{
-			if (_detector == null)
-				return;
-			_detector.OnPointerInputsUpdate -= listener;
+			return PointersInput;
 		}
 
 		private PointersInputDetector getDetector()
@@ -72,18 +60,6 @@ namespace SBaier.Input
 				_detector = createInputDetector(_detectorPrefab, new PrefabFactory.Parameter[] {
 					new PrefabFactory.Parameter(_maxPointerCount), new PrefabFactory.Parameter(_maxRaycastDistance) });
 			return _detector;
-		}
-
-		private void onUpdate(PointersInputEventArgs args)
-		{
-			for (int i = 0; i < args.PointerInputs.Count; i++)
-			{
-				if (!_pointerListeners.ContainsKey(i))
-					continue;
-				List<Action<PointerInputEventArgs>> listeners = _pointerListeners[i];
-				foreach (Action<PointerInputEventArgs> listener in listeners)
-					listener.Invoke(args.PointerInputs[i]);
-			}
 		}
 	}
 }

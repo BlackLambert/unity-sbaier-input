@@ -18,14 +18,9 @@ namespace SBaier.Input.Test
 		}
 
 
-		protected virtual void Start()
+		protected virtual void Update()
 		{
-			_pointerInputRegistry.Subscribe(onPointerUpdate);
-		}
-
-		protected virtual void OnDestroy()
-		{
-			_pointerInputRegistry.Unsubscribe(onPointerUpdate);
+			onPointerUpdate(_pointerInputRegistry.GetPointerInput());
 		}
 
 		private void onPointerUpdate(PointersInputEventArgs args)
