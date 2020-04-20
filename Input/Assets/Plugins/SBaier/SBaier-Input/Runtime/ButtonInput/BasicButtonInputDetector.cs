@@ -28,6 +28,7 @@ namespace SBaier.Input
 			}
 			else if(UnityEngine.Input.GetKeyUp(_key))
 			{
+				_stateDuration += Time.deltaTime;
 				OnReleased?.Invoke(createArg(ButtonState.Released));
 				_stateDuration = 0;
 			}
