@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
+using System.Linq;
 
 namespace SBaier.Input
 {
@@ -23,16 +24,16 @@ namespace SBaier.Input
 
 		protected RaycastAllResult raycastAt(Vector2 screenPosition)
 		{
-			List<PointerRaycastHit> hits = new List<PointerRaycastHit>();
 			if (_inputCamera == null)
 				return new RaycastAllResult(new PointerRaycastHit[0], false);
 			Ray ray = _inputCamera.ScreenPointToRay(screenPosition);
-			hits.AddRange(raycastPhysics(ray));
-			hits.AddRange(raycast2D(ray));
+			List<PointerRaycastHit> objectHits = new List<PointerRaycastHit>();
+			objectHits.AddRange(raycastPhysics(ray));
+			objectHits.AddRange(raycast2D(ray));
 			List<PointerRaycastHit> uIHits = raycastUI(screenPosition);
-			hits.AddRange(uIHits);
 			bool overUI = uIHits.Count > 0;
-			return new RaycastAllResult(hits.ToArray(), overUI);
+			uIHits.AddRange(objectHits.OrderBy(hit => hit.Distance));
+			return new RaycastAllResult(uIHits.ToArray(), overUI);
 		}
 
 		private List<PointerRaycastHit> raycastPhysics(Ray ray)
