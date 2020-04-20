@@ -10,7 +10,6 @@ namespace SBaier.Input
 		private PointerButtonInputRegistry _pointerButtonInputRegistry;
 		private ClickInputDetectorParameter _parameter;
 
-		private PointerInputEventArgs _currentPointerInput = null;
 		private PointerInputEventArgs _pointerInputOnClickStart = null;
 
 		public override event Action<ClickInputEventArgs> OnClick;
@@ -29,26 +28,25 @@ namespace SBaier.Input
 		{
 			_pointerButtonInputRegistry.Subscribe(_parameter.PointerButtonIndex, ButtonState.Down, onPointerButtonInputDown);
 			_pointerButtonInputRegistry.Subscribe(_parameter.PointerButtonIndex, ButtonState.Released, onPointerButtonInputUp);
-			_pointerInputRegistry.Subscribe(_parameter.PointerIndex, onPointerInput);
 		}
 
 		protected virtual void OnDisable()
 		{
 			_pointerButtonInputRegistry.Unsubscribe(_parameter.PointerButtonIndex, ButtonState.Down, onPointerButtonInputDown);
 			_pointerButtonInputRegistry.Unsubscribe(_parameter.PointerButtonIndex, ButtonState.Released, onPointerButtonInputUp);
-			_pointerInputRegistry.Unsubscribe(_parameter.PointerIndex, onPointerInput);
 		}
 
 
 		private void onPointerButtonInputDown(PointerButtonInputEventArgs args)
 		{
-			_pointerInputOnClickStart = _currentPointerInput;
+			_pointerInputOnClickStart = _pointerInputRegistry.GetPointerInput(_parameter.PointerButtonIndex);
 		}
 
 		private void onPointerButtonInputUp(PointerButtonInputEventArgs args)
 		{
-			if(args.Duration > _parameter.ClickParameter.MaxClickDuration ||
-				(_currentPointerInput.ScreenPosition - _pointerInputOnClickStart.ScreenPosition).magnitude > _parameter.ClickParameter.MaxPointerDelta)
+			PointerInputEventArgs pointerInput = _pointerInputRegistry.GetPointerInput(_parameter.PointerButtonIndex);
+			if (args.Duration > _parameter.ClickParameter.MaxClickDuration ||
+				(pointerInput.ScreenPosition - _pointerInputOnClickStart.ScreenPosition).magnitude > _parameter.ClickParameter.MaxPointerDelta)
 			{
 				clean();
 				return;
@@ -56,7 +54,7 @@ namespace SBaier.Input
 
 			List<PointerRaycastHit> hits = new List<PointerRaycastHit>();
 
-			foreach(PointerRaycastHit hit in _currentPointerInput.RaycastHits)
+			foreach(PointerRaycastHit hit in pointerInput.RaycastHits)
 			{
 				foreach(PointerRaycastHit clickStartHit in _pointerInputOnClickStart.RaycastHits)
 				{
@@ -68,11 +66,6 @@ namespace SBaier.Input
 
 			OnClick?.Invoke(new ClickInputEventArgs(hits.ToArray(), _pointerInputOnClickStart));
 			clean();
-		}
-
-		private void onPointerInput(PointerInputEventArgs args)
-		{
-			_currentPointerInput = args;
 		}
 
 		private void clean()
