@@ -6,17 +6,14 @@ namespace SBaier.Input
 {
 	public class ClickInputDetectorParameter
 	{
-		public ClickInputParameter ClickParameter { get; }
-		public int PointerButtonIndex { get; }
-		public int PointerIndex { get; }
+		public ClickInputParameter InputParameter { get; }
+		public ClickPointerParameter PointerParameter { get; }
 
 		public ClickInputDetectorParameter(ClickInputParameter clickParameter,
-			int mouseButtonIndex,
-			int pointerIndex)
+			ClickPointerParameter pointerParameter)
 		{
-			ClickParameter = clickParameter;
-			PointerButtonIndex = mouseButtonIndex;
-			PointerIndex = pointerIndex;
+			InputParameter = clickParameter;
+			PointerParameter = pointerParameter;
 		}
 	}
 }

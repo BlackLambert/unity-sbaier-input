@@ -1,48 +1,45 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Zenject;
 
 namespace SBaier.Input
 {
 	public class ClickInputRegistryImpl : ClickInputRegistry
 	{
-		private Dictionary<Vector2, ClickInputDetector> _detectors = new Dictionary<Vector2, ClickInputDetector>();
+		private Dictionary<ClickPointerParameter, ClickInputDetector> _detectors = new Dictionary<ClickPointerParameter, ClickInputDetector>();
 		private ClickInputDetector _detectorPrefab;
-		private ClickInputParameter _parameter;
+		private ClickInputParameter _inputParameter;
 
 
 		[Inject]
 		private void Construct(ClickInputDetector detectorPrefab,
-			ClickInputParameter parameter)
+			ClickInputParameter inputParameter)
 		{
 			_detectorPrefab = detectorPrefab;
-			_parameter = parameter;
+			_inputParameter = inputParameter;
 		}
 
-		public override void Subscribe(int pointerIndex, int pointerButtonIndex, Action<ClickInputEventArgs> listener)
+		public override void Subscribe(ClickPointerParameter parameter, Action<ClickInputEventArgs> listener)
 		{
-			ClickInputDetector detector = getDetector(pointerIndex, pointerButtonIndex);
+			ClickInputDetector detector = getDetector(parameter);
 			detector.OnClick += listener;
 		}
 
-		public override void Unsubscribe(int pointerIndex, int pointerButtonIndex, Action<ClickInputEventArgs> listener)
+		public override void Unsubscribe(ClickPointerParameter parameter, Action<ClickInputEventArgs> listener)
 		{
-			ClickInputDetector detector = getDetector(pointerIndex, pointerButtonIndex);
+			ClickInputDetector detector = getDetector(parameter);
 			detector.OnClick -= listener;
 		}
 
-		private ClickInputDetector getDetector(int pointerIndex, int pointerButtonIndex)
+		private ClickInputDetector getDetector(ClickPointerParameter parameter)
 		{
 			ClickInputDetector inputDetector;
-			Vector2 key = new Vector2(pointerIndex, pointerButtonIndex);
-			if (!_detectors.TryGetValue(key, out inputDetector))
+			if (!_detectors.TryGetValue(parameter, out inputDetector))
 			{
-				ClickInputDetectorParameter detectorParameter = new ClickInputDetectorParameter(_parameter, pointerIndex, pointerButtonIndex);
+				ClickInputDetectorParameter detectorParameter = new ClickInputDetectorParameter(_inputParameter, parameter);
 				PrefabFactory.Parameter[] parameters = new PrefabFactory.Parameter[] { new PrefabFactory.Parameter(detectorParameter) };
 				inputDetector = createInputDetector(_detectorPrefab, parameters);
-				_detectors.Add(key, inputDetector);
+				_detectors.Add(parameter, inputDetector);
 			}
 			return inputDetector;
 		}

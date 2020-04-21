@@ -26,27 +26,27 @@ namespace SBaier.Input
 
 		protected virtual void OnEnable()
 		{
-			_pointerButtonInputRegistry.Subscribe(_parameter.PointerButtonIndex, ButtonState.Down, onPointerButtonInputDown);
-			_pointerButtonInputRegistry.Subscribe(_parameter.PointerButtonIndex, ButtonState.Released, onPointerButtonInputUp);
+			_pointerButtonInputRegistry.Subscribe(_parameter.PointerParameter.PointerButtonIndex, ButtonState.Down, onPointerButtonInputDown);
+			_pointerButtonInputRegistry.Subscribe(_parameter.PointerParameter.PointerButtonIndex, ButtonState.Released, onPointerButtonInputUp);
 		}
 
 		protected virtual void OnDisable()
 		{
-			_pointerButtonInputRegistry.Unsubscribe(_parameter.PointerButtonIndex, ButtonState.Down, onPointerButtonInputDown);
-			_pointerButtonInputRegistry.Unsubscribe(_parameter.PointerButtonIndex, ButtonState.Released, onPointerButtonInputUp);
+			_pointerButtonInputRegistry.Unsubscribe(_parameter.PointerParameter.PointerButtonIndex, ButtonState.Down, onPointerButtonInputDown);
+			_pointerButtonInputRegistry.Unsubscribe(_parameter.PointerParameter.PointerButtonIndex, ButtonState.Released, onPointerButtonInputUp);
 		}
 
 
 		private void onPointerButtonInputDown(PointerButtonInputEventArgs args)
 		{
-			_pointerInputOnClickStart = _pointerInputRegistry.GetPointerInput(_parameter.PointerButtonIndex);
+			_pointerInputOnClickStart = _pointerInputRegistry.GetPointerInput(_parameter.PointerParameter.PointerButtonIndex);
 		}
 
 		private void onPointerButtonInputUp(PointerButtonInputEventArgs args)
 		{
-			PointerInputEventArgs pointerInput = _pointerInputRegistry.GetPointerInput(_parameter.PointerButtonIndex);
-			if (args.Duration > _parameter.ClickParameter.MaxClickDuration ||
-				(pointerInput.ScreenPosition - _pointerInputOnClickStart.ScreenPosition).magnitude > _parameter.ClickParameter.MaxPointerDelta)
+			PointerInputEventArgs pointerInput = _pointerInputRegistry.GetPointerInput(_parameter.PointerParameter.PointerButtonIndex);
+			if (args.Duration > _parameter.InputParameter.MaxClickDuration ||
+				(pointerInput.ScreenPosition - _pointerInputOnClickStart.ScreenPosition).magnitude > _parameter.InputParameter.MaxPointerDelta)
 			{
 				clean();
 				return;
