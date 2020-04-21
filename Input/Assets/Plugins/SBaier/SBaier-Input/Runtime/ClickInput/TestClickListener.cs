@@ -11,20 +11,23 @@ namespace SBaier.Input.Test
 		[SerializeField]
 		private int _pointerButtonIndex = 0;
 
+		private ClickPointerParameter _parameter;
+
 		[Inject]
 		private void Construct(ClickInputRegistry registry)
 		{
 			_registry = registry;
+			_parameter = new ClickPointerParameter(_pointerIndex, _pointerButtonIndex);
 		}
 
 		protected virtual void Start()
 		{
-			_registry.Subscribe(_pointerIndex, _pointerButtonIndex, onClick);
+			_registry.Subscribe(_parameter, onClick);
 		}
 
 		private void onClick(ClickInputEventArgs obj)
 		{
-			string log = $"The {_pointerIndex.ToString()}-PointerButton has been clicked at position {obj.PointerInput.ScreenPosition} ({UnityEngine.Input.mousePosition}) over {obj.ClickedObjects.Length} Objects.";
+			string log = $"The {_parameter.PointerIndex.ToString()}-PointerButton has been clicked at position {obj.PointerInput.ScreenPosition} ({UnityEngine.Input.mousePosition}) over {obj.ClickedObjects.Length} Objects.";
 			foreach(PointerRaycastHit hit in obj.ClickedObjects)
 			{
 				log += $" {hit.Obj.name}";
@@ -35,7 +38,7 @@ namespace SBaier.Input.Test
 
 		protected virtual void OnDestroy()
 		{
-			_registry.Unsubscribe(_pointerIndex, _pointerButtonIndex, onClick);
+			_registry.Unsubscribe(_parameter, onClick);
 		}
 	}
 }
