@@ -34,7 +34,7 @@ namespace SBaier.Input
 			Clickable clickable = hit.Obj.GetComponent<Clickable>();
 			if (clickable == null)
 				return;
-			clickable.Click();
+			clickable.Click(new ClickableInputEventArgs(hit, args.PointerInput));
 		}
 	}
 }
