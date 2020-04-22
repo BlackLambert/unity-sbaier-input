@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SBaier.Input
 {
 	public class Clickable : MonoBehaviour
 	{
-		public event Action OnClick;
+		public event Action<ClickableInputEventArgs> OnClick;
 
-		public void Click()
+		public void Click(ClickableInputEventArgs args)
 		{
-			OnClick?.Invoke();
+			OnClick?.Invoke(args);
 		}
 	}
 

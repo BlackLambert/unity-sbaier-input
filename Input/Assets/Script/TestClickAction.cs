@@ -21,11 +21,11 @@ namespace SBaier.Input.Test
 			_clickable.OnClick -= onClick;
 		}
 
-		private void onClick()
+		private void onClick(ClickableInputEventArgs args)
 		{
 			Color col = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 			_meshRenderer.material.color = col;
-			Debug.Log($"Changing color to {col}");
+			Debug.Log($"Changing color to {col} | Clicked at {args.RaycastHit.Point}");
 		}
 	}
 }
