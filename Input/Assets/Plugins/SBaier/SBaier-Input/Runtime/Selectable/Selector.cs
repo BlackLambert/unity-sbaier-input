@@ -50,7 +50,7 @@ namespace SBaier.Input
 				if (_selected != null)
 					_selected.Deselect();
 				_selected = selectable;
-				_selected.Select();
+				_selected.Select(new SelectableInputEventArgs(hit, args.PointerInput));
 			}
 		}
 	}

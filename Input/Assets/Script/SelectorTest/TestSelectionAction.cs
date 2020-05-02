@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 namespace SBaier.Input.Test
@@ -28,9 +27,10 @@ namespace SBaier.Input.Test
 			_selectable.OnDeselect -= onDeselect;
 		}
 
-		private void onSelect()
+		private void onSelect(SelectableInputEventArgs args)
 		{
 			_meshRenderer.material = _selected;
+			Debug.Log($"Selected at {args.RaycastHit.Point}");
 		}
 
 		private void onDeselect()
