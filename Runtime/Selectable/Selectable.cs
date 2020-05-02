@@ -13,14 +13,14 @@ namespace SBaier.Input
 		}
 		private bool _isSelectable = true;
 
-		public event Action OnSelect;
+		public event Action<SelectableInputEventArgs> OnSelect;
 		public event Action OnDeselect;
 
-		public void Select()
+		public void Select(SelectableInputEventArgs args)
 		{
 			if (!_isSelectable)
 				return;
-			OnSelect?.Invoke();
+			OnSelect?.Invoke(args);
 		}
 
 		public void Deselect()
