@@ -13,6 +13,9 @@ namespace SBaier.Input
 		}
 		private bool _isSelectable = true;
 
+		public abstract bool DeselectOnDoubleSelect { get; }
+		public abstract bool SelectAgainOnDoubleSelect { get; }
+
 		public event Action<SelectableInputEventArgs> OnSelect;
 		public event Action OnDeselect;
 

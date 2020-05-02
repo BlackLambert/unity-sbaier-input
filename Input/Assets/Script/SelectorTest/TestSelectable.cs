@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
 
 namespace SBaier.Input.Test
 {
 	public class TestSelectable : Selectable
 	{
+		public override bool DeselectOnDoubleSelect => false;
 
+		public override bool SelectAgainOnDoubleSelect => true;
 	}
 }
