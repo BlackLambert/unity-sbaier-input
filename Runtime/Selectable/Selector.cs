@@ -5,7 +5,7 @@ using Zenject;
 
 namespace SBaier.Input
 {
-	public class Selector<TSelectable> : MonoBehaviour where TSelectable : Selectable
+	public abstract class Selector<TSelectable> : MonoBehaviour where TSelectable : Selectable
 	{
 		private ClickInputRegistry _clickInputRegistry;
 		private ClickPointerParameter _clickPointerParameter;
@@ -42,8 +42,13 @@ namespace SBaier.Input
 				return;
 			if (_selected == selectable)
 			{
-				_selected.Deselect();
-				_selected = null;
+				if (selectable.DeselectOnDoubleSelect)
+				{
+					_selected.Deselect();
+					_selected = null;
+				}
+				else if(selectable.SelectAgainOnDoubleSelect)
+					_selected.Select(new SelectableInputEventArgs(hit, args.PointerInput));
 			}
 			else
 			{
