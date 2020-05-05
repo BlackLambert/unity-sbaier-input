@@ -47,7 +47,7 @@ namespace SBaier.Input
 					_selected.Deselect();
 					_selected = null;
 				}
-				else if(selectable.SelectAgainOnDoubleSelect)
+				if(selectable.SelectAgainOnDoubleSelect)
 					_selected.Select(new SelectableInputEventArgs(hit, args.PointerInput));
 			}
 			else
@@ -57,6 +57,13 @@ namespace SBaier.Input
 				_selected = selectable;
 				_selected.Select(new SelectableInputEventArgs(hit, args.PointerInput));
 			}
+		}
+
+		public void Deselect()
+		{
+			if (_selected != null)
+				_selected.Deselect();
+			_selected = null;
 		}
 	}
 }
