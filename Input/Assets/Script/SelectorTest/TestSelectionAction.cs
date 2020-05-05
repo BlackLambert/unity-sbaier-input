@@ -36,6 +36,7 @@ namespace SBaier.Input.Test
 		private void onDeselect()
 		{
 			_meshRenderer.material = _notSelected;
+			Debug.Log($"Deselected");
 		}
 	}
 }

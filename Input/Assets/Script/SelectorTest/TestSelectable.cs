@@ -1,11 +1,17 @@
 ﻿
 
+using UnityEngine;
+
 namespace SBaier.Input.Test
 {
 	public class TestSelectable : Selectable
 	{
-		public override bool DeselectOnDoubleSelect => false;
+		[SerializeField]
+		private bool _deselectOnDoubleSelect = true;
+		public override bool DeselectOnDoubleSelect => _deselectOnDoubleSelect;
 
-		public override bool SelectAgainOnDoubleSelect => true;
+		[SerializeField]
+		private bool _selectAgainOnDoubleSelect = true;
+		public override bool SelectAgainOnDoubleSelect => _selectAgainOnDoubleSelect;
 	}
 }
