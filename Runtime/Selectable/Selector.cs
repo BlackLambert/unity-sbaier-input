@@ -30,6 +30,13 @@ namespace SBaier.Input
 			_clickInputRegistry.Unsubscribe(_clickPointerParameter, onClick);
 		}
 
+		public void Deselect()
+		{
+			if (_selected != null)
+				_selected.Deselect();
+			_selected = null;
+		}
+
 		private void onClick(ClickInputEventArgs args)
 		{
 			if (args.ClickedObjects.Length == 0)
@@ -38,32 +45,44 @@ namespace SBaier.Input
 			TSelectable selectable = hit.Obj.GetComponent<TSelectable>();
 			if (selectable == null)
 				return;
-			if (!selectable.IsSelectable)
+			onSelectableClicked(createArgs(selectable, hit, args.PointerInput));
+		}
+
+		private void onSelectableClicked(SelectableInputEventArgs args)
+		{
+			if (!args.Selectable.IsSelectable)
 				return;
-			if (_selected == selectable)
-			{
-				if (selectable.DeselectOnDoubleSelect)
-				{
-					_selected.Deselect();
-					_selected = null;
-				}
-				if(selectable.SelectAgainOnDoubleSelect)
-					_selected.Select(new SelectableInputEventArgs(hit, args.PointerInput));
-			}
+			if (_selected == args.Selectable)
+				onSelectableDoubleSelect(args);
 			else
+				onOtherSelectableClicked(args);
+		}
+
+		private void onSelectableDoubleSelect(SelectableInputEventArgs args)
+		{
+			if (args.Selectable.DeselectOnDoubleSelect)
 			{
-				if (_selected != null)
-					_selected.Deselect();
-				_selected = selectable;
-				_selected.Select(new SelectableInputEventArgs(hit, args.PointerInput));
+				_selected.Deselect();
+				_selected = null;
+			}
+			if (args.Selectable.SelectAgainOnDoubleSelect)
+			{
+				_selected = args.Selectable;
+				_selected.Select(args);
 			}
 		}
 
-		public void Deselect()
+		private void onOtherSelectableClicked(SelectableInputEventArgs args)
 		{
 			if (_selected != null)
 				_selected.Deselect();
-			_selected = null;
+			_selected = args.Selectable;
+			_selected.Select(args);
+		}
+
+		private SelectableInputEventArgs createArgs(TSelectable selectable, PointerRaycastHit hit, PointerInputEventArgs args)
+		{
+			return new SelectableInputEventArgs(selectable, hit, args);
 		}
 	}
 }
