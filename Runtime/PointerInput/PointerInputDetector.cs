@@ -10,13 +10,16 @@ namespace SBaier.Input
 	{
 		private float _maxRaycastDistance;
 		private Camera _inputCamera;
+		private bool _triggerRaycastable;
 
 
 		[Inject]
-		private void Construct(float maxRaycastDistance, [Inject(Id = "InputCamera")]Camera inputCamera)
+		private void Construct(float maxRaycastDistance, [Inject(Id = "InputCamera")]Camera inputCamera,
+			bool triggerRaycastable)
 		{
 			_maxRaycastDistance = maxRaycastDistance;
 			_inputCamera = inputCamera;
+			_triggerRaycastable = triggerRaycastable;
 		}
 
 
@@ -41,7 +44,11 @@ namespace SBaier.Input
 			List<PointerRaycastHit> result = new List<PointerRaycastHit>();
 			RaycastHit[] hits = Physics.RaycastAll(ray, _maxRaycastDistance);
 			foreach (RaycastHit hit in hits)
+			{
+				if (!_triggerRaycastable && hit.collider.isTrigger)
+					continue;
 				result.Add(new PointerRaycastHit(hit.transform, hit.point, hit.distance));
+			}
 			return result;
 		}
 

@@ -13,6 +13,7 @@ namespace SBaier.Input
 		private int _maxPointerCount;
 		private float _maxRaycastDistance;
 		private float _lastCheckedTime;
+		private bool _triggerRaycastable;
 
 		private PointersInputEventArgs _pointersInput;
 		private PointersInputEventArgs PointersInput
@@ -30,12 +31,13 @@ namespace SBaier.Input
 
 		[Inject]
 		private void Construct(PointersInputDetector detectorPrefab, int maxPointerCount,
-			float maxRaycastDistance)
+			float maxRaycastDistance, bool triggerRaycastable)
 		{
 			_detectorPrefab = detectorPrefab;
 			_maxPointerCount = maxPointerCount;
 			_maxRaycastDistance = maxRaycastDistance;
 			_lastCheckedTime = -1;
+			_triggerRaycastable = triggerRaycastable;
 		}
 
 
@@ -58,7 +60,8 @@ namespace SBaier.Input
 		{
 			if (_detector == null)
 				_detector = createInputDetector(_detectorPrefab, new PrefabFactory.Parameter[] {
-					new PrefabFactory.Parameter(_maxPointerCount), new PrefabFactory.Parameter(_maxRaycastDistance) });
+					new PrefabFactory.Parameter(_maxPointerCount), new PrefabFactory.Parameter(_maxRaycastDistance),
+					new PrefabFactory.Parameter(_triggerRaycastable)});
 			return _detector;
 		}
 	}
