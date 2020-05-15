@@ -17,7 +17,7 @@ namespace SBaier.Input
 		[SerializeField]
 		private int _clickPointerIndex = 0;
 		[SerializeField]
-		private int _clickPointerButtonIndex = 0; 
+		private int _clickPointerButtonIndex = 0;
 
 		public override void InstallBindings()
 		{

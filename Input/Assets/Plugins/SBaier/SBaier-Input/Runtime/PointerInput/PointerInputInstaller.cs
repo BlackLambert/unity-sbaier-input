@@ -14,11 +14,13 @@ namespace SBaier.Input
 		private float _maximalRaycastDistance = 200f;
 		[SerializeField]
 		private Camera _inputCamera = null;
+		[SerializeField]
+		private bool _triggerRaycastable = false;
 
 		public override void InstallBindings()
 		{
 			GameObject hook = new GameObject("PointerInputDetector");
-			Container.Bind(typeof(PointerInputRegistry)).To<PointerInputRegistryImpl>().AsSingle().WithArguments(hook, _maxPointerCount, _maximalRaycastDistance);
+			Container.Bind(typeof(PointerInputRegistry)).To<PointerInputRegistryImpl>().AsSingle().WithArguments(hook, _maxPointerCount, _maximalRaycastDistance, _triggerRaycastable);
 			if(Application.isMobilePlatform)
 				Container.Bind(typeof(PointersInputDetector)).To<TouchPointersInputDetector>().FromResource(_touchInputDetectorPrefabPath).AsTransient();
 			else
