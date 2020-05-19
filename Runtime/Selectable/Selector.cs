@@ -11,13 +11,16 @@ namespace SBaier.Input
 		private ClickPointerParameter _clickPointerParameter;
 
 		private Selectable _selected = null;
+		private bool _debugMode = false;
 
 		[Inject]
 		private void Construct(ClickInputRegistry clickInputRegistry, 
-			ClickPointerParameter clickPointerParameter)
+			ClickPointerParameter clickPointerParameter,
+			[InjectOptional]bool debugMode = false)
 		{
 			_clickInputRegistry = clickInputRegistry;
 			_clickPointerParameter = clickPointerParameter;
+			_debugMode = debugMode;
 		}
 
 		protected virtual void Start()
@@ -42,9 +45,13 @@ namespace SBaier.Input
 			if (args.ClickedObjects.Length == 0)
 				return;
 			PointerRaycastHit hit = args.ClickedObjects[0];
+			if (_debugMode)
+				Debug.Log($"Trying to select {hit.Obj.name}");
 			TSelectable selectable = hit.Obj.GetComponent<TSelectable>();
 			if (selectable == null)
 				return;
+			if (_debugMode)
+				Debug.Log($"Selecting {selectable.name}");
 			onSelectableClicked(createArgs(selectable, hit, args.PointerInput));
 		}
 
