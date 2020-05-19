@@ -7,7 +7,7 @@ namespace SBaier.Input.Test
 	{
 		public override void InstallBindings()
 		{
-			Container.Bind(typeof(TestSelector)).To<TestSelector>().FromNewComponentOnNewGameObject().AsSingle().NonLazy();
+			Container.Bind(typeof(TestSelector)).To<TestSelector>().FromNewComponentOnNewGameObject().AsSingle().WithArguments(true).NonLazy();
 		}
 	}
 }
