@@ -11,6 +11,7 @@ namespace SBaier.Input
 		private ClickPointerParameter _clickPointerParameter;
 
 		private Selectable _selected = null;
+		public Selectable Selected => _selected;
 		private bool _debugMode = false;
 
 		[Inject]
@@ -36,7 +37,11 @@ namespace SBaier.Input
 		public void Deselect()
 		{
 			if (_selected != null)
+			{
+				if (_debugMode)
+					Debug.Log($"Deselecting {_selected.name}");
 				_selected.Deselect();
+			}
 			_selected = null;
 		}
 
